@@ -5,6 +5,8 @@ import (
 	"crypto/x509"
 	"github.com/Al2Klimov/FUeL.go"
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/crypto/ssh/terminal"
+	"os"
 	"time"
 )
 
@@ -39,6 +41,15 @@ type Numbered struct {
 
 func (n Numbered) Number() int {
 	return n.Nr
+}
+
+func SetupLogging() {
+	log.SetLevel(log.TraceLevel)
+	log.SetOutput(os.Stdout)
+
+	if !terminal.IsTerminal(int(os.Stdout.Fd())) {
+		log.SetFormatter(&log.JSONFormatter{DisableHTMLEscape: true})
+	}
 }
 
 func ProviderLog(p Provider) *log.Entry {

@@ -1,6 +1,7 @@
 package main
 
 import (
+	. "TLSAutomate/internal"
 	. "TLSAutomate/internal/business-logic"
 	"context"
 	"errors"
@@ -9,7 +10,6 @@ import (
 	"github.com/Al2Klimov/DullDB"
 	"github.com/Al2Klimov/FUeL.go"
 	log "github.com/sirupsen/logrus"
-	"golang.org/x/crypto/ssh/terminal"
 	"gopkg.in/yaml.v2"
 	"os"
 	"strings"
@@ -21,12 +21,7 @@ func main() {
 	db := flag.String("db", "TLSAutomate.json", "FILE")
 	flag.Parse()
 
-	log.SetLevel(log.TraceLevel)
-	log.SetOutput(os.Stdout)
-
-	if !terminal.IsTerminal(int(os.Stdout.Fd())) {
-		log.SetFormatter(&log.JSONFormatter{DisableHTMLEscape: true})
-	}
+	SetupLogging()
 
 	if err := run(*config, *db); err != nil && !errors.Is(err, context.Canceled) {
 		log.WithError(err).Fatal()
