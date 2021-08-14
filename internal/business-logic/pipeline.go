@@ -193,17 +193,15 @@ func assemble(
 		}
 
 		hashed := hashBytes(unhashed)
-		for _, proto := range protocols {
-			for _, port := range proto.getPorts(cfg) {
-				var service string
-				if strings.HasPrefix(san, "*") {
-					service = san
-				} else {
-					service = fmt.Sprintf("_%d._%s.%s", port, proto.name, san)
-				}
-
-				records[OutputRecord{cfg.Records, service, Base64er(hashed)}] = struct{}{}
+		for svc := range cfg.Services() {
+			var service string
+			if strings.HasPrefix(san, "*") {
+				service = san
+			} else {
+				service = fmt.Sprintf("%s.%s", svc, san)
 			}
+
+			records[OutputRecord{cfg.Records, service, Base64er(hashed)}] = struct{}{}
 		}
 	}
 

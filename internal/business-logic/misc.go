@@ -7,6 +7,7 @@ import (
 	"crypto/sha512"
 	"crypto/x509"
 	"encoding/hex"
+	"fmt"
 	"github.com/Al2Klimov/FUeL.go"
 	log "github.com/sirupsen/logrus"
 	"runtime"
@@ -24,13 +25,38 @@ type Config struct {
 		Tcp []uint16 `yaml:"tcp"`
 		Udp []uint16 `yaml:"udp"`
 	} `yaml:"ports"`
-	Records Record `yaml:"records"`
-	Outputs struct {
+	services map[string]struct{}
+	Records  Record `yaml:"records"`
+	Outputs  struct {
 		Debug bool `yaml:"debug"`
 		DeSec []struct {
 			Token string `yaml:"token"`
 		} `yaml:"desec"`
 	} `yaml:"outputs"`
+}
+
+func (c *Config) Services() map[string]struct{} {
+	if c.services == nil {
+		for _, proto := range protocols {
+			if proto.getPorts(c) != nil {
+				c.services = map[string]struct{}{}
+				for _, proto := range protocols {
+					for _, port := range proto.getPorts(c) {
+						c.services[fmt.Sprintf("_%d._%s", port, proto.name)] = struct{}{}
+					}
+				}
+
+				return c.services
+			}
+		}
+
+		c.services = map[string]struct{}{}
+		for _, proto := range protocols {
+			c.services[fmt.Sprintf("*._%s", proto.name)] = struct{}{}
+		}
+	}
+
+	return c.services
 }
 
 type DB struct {

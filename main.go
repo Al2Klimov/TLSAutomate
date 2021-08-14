@@ -91,10 +91,6 @@ func validateConfig(cfg *Config) fuel.ErrorWithStack {
 		}
 	}
 
-	if len(cfg.Ports.Tcp) < 1 && len(cfg.Ports.Udp) < 1 {
-		return fuel.AttachStackToError(errors.New("no ports given"), 0)
-	}
-
 	for _, constraint := range []struct {
 		what     string
 		actual   uint8
