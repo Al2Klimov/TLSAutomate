@@ -1,0 +1,19 @@
+name: Docker
+on:
+  push:
+    branches:
+    - master
+  pull_request: {}
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - run: docker build -t grandmaster/tlsautomate .
+    - if: "github.event_name == 'push'"
+      env:
+        DOCKER_HUB_TOKEN: '${{ secrets.DOCKER_HUB_TOKEN }}'
+      run: |-
+        tr -d \\n <<<"$DOCKER_HUB_TOKEN" |docker login -u grandmaster --password-stdin
+    - if: "github.event_name == 'push'"
+      run: docker push grandmaster/tlsautomate
