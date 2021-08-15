@@ -48,19 +48,24 @@ func (d *DeSEC) Update(ctx context.Context, del, create OutputRecordSet) fuel.Er
 	recordDomains := map[OutputRecord][2]string{}
 	relevantDomains := map[string]struct{}{}
 
-	for _, ors := range [2]OutputRecordSet{del, create} {
-		for or := range ors {
-			for domain, suffix := range domainSuffixes {
-				if strings.HasSuffix(or.Service, suffix) {
-					recordDomains[or] = [2]string{domain, strings.TrimSuffix(or.Service, suffix)}
-					relevantDomains[domain] = struct{}{}
-					break
+	fillRecordDomains := func() {
+		for _, ors := range [2]OutputRecordSet{del, create} {
+			for or := range ors {
+				for domain, suffix := range domainSuffixes {
+					if strings.HasSuffix(or.Service, suffix) {
+						recordDomains[or] = [2]string{domain, strings.TrimSuffix(or.Service, suffix)}
+						relevantDomains[domain] = struct{}{}
+						break
+					}
 				}
 			}
 		}
 	}
 
+	fillRecordDomains()
+
 	subNames := map[string]map[string]struct{}{}
+	aRecs := map[string]struct{}{}
 	rm := map[string]map[string]struct{}{}
 	patch := map[string]map[string]map[string]interface{}{}
 	add := map[string]map[string]map[string]interface{}{}
@@ -75,11 +80,13 @@ func (d *DeSEC) Update(ctx context.Context, del, create OutputRecordSet) fuel.Er
 	for domain, perDomain := range subNames {
 		var records []struct {
 			SubName string `json:"subname"`
+			Name    string `json:"name"`
+			Type    string `json:"type"`
 		}
 
 		err := d.paginate(
 			ctx,
-			v1Domains.ResolveReference(&url.URL{Path: url.PathEscape(domain) + "/rrsets/", RawQuery: "type=TLSA"}),
+			v1Domains.ResolveReference(&url.URL{Path: url.PathEscape(domain) + "/rrsets/"}),
 			&records,
 		)
 		if err != nil {
@@ -87,9 +94,17 @@ func (d *DeSEC) Update(ctx context.Context, del, create OutputRecordSet) fuel.Er
 		}
 
 		for _, record := range records {
-			perDomain[record.SubName] = struct{}{}
+			switch record.Type {
+			case "TLSA":
+				perDomain[record.SubName] = struct{}{}
+			case "A", "AAAA":
+				aRecs[strings.TrimSuffix(record.Name, ".")] = struct{}{}
+			}
 		}
 	}
+
+	Unwildcard(d, aRecs, &del, &create)
+	fillRecordDomains()
 
 	for or := range del {
 		if dm, ok := recordDomains[or]; ok {
