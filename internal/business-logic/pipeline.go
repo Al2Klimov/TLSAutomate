@@ -248,6 +248,11 @@ func apply(ctx context.Context, to []Output, db string, records OutputRecordSet)
 		}
 	}
 
+	if len(create) < 1 && len(del) < 1 {
+		log.Info("not applying empty diff")
+		return nil
+	}
+
 	maybeWritten := OutputRecordSet{}
 	for _, ors := range [3]OutputRecordSet{state.MaybeWritten, state.Written, records} {
 		for or := range ors {
