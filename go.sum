@@ -2,6 +2,8 @@ github.com/Al2Klimov/DullDB v1.0.0 h1:hp6wKW8adHzGYuKmBBbqTEX4w9vsFr+PcCYsQMuCBN
 github.com/Al2Klimov/DullDB v1.0.0/go.mod h1:6fhMDw1FRUqvKZgcDYECTvfJG1UKKtZbLLEsrkuqSJE=
 github.com/Al2Klimov/FUeL.go v0.1.0 h1:Xm1PGzR+j+mOa2iVodglEZCUCRx7lrhzOMlGGoJtN3g=
 github.com/Al2Klimov/FUeL.go v0.1.0/go.mod h1:XBV3w0rnsOLmXOCZTktMmfF86lqVi/5b/56219trGCs=
+github.com/Al2Klimov/go-gen-source-repos v0.1.0 h1:D8ZDZk37ZJV2IQwIuGr3a0GDX7MGt8OZ5XhnhSehoSc=
+github.com/Al2Klimov/go-gen-source-repos v0.1.0/go.mod h1:l5fESJQgkQ1xeQjuPK9uEUKF/mTq6WPsPBOgu050BAY=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/fsnotify/fsnotify v1.4.9 h1:hsms1Qyu0jgnwNXIxa+/V/PDsU6CfLf6CNO8H7IWoS4=

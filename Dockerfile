@@ -4,6 +4,8 @@ ADD . /TLSAutomate
 ENV CGO_ENABLED 0
 
 WORKDIR /TLSAutomate
+RUN ["go", "mod", "download"]
+RUN ["go", "generate", "./..."]
 RUN ["go", "build", "-ldflags", "-s -w", "."]
 RUN ["upx", "TLSAutomate"]
 

@@ -1,3 +1,5 @@
+//go:generate go run github.com/Al2Klimov/go-gen-source-repos github.com/Al2Klimov/TLSAutomate
+
 package main
 
 import (
@@ -9,6 +11,7 @@ import (
 	"fmt"
 	"github.com/Al2Klimov/DullDB"
 	"github.com/Al2Klimov/FUeL.go"
+	_ "github.com/Al2Klimov/go-gen-source-repos/noop"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 	"os"
@@ -22,6 +25,10 @@ func main() {
 	flag.Parse()
 
 	SetupLogging()
+
+	log.WithField("projects", GithubcomAl2klimovGo_gen_source_repos).Info(
+		"for the terms of use, the source code and the authors see the projects this program is assembled from",
+	)
 
 	if err := run(*config, *db); err != nil && !errors.Is(err, context.Canceled) {
 		log.WithError(err).Fatal()

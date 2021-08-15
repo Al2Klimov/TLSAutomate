@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/Al2Klimov/DullDB v1.0.0
 	github.com/Al2Klimov/FUeL.go v0.1.0
+	github.com/Al2Klimov/go-gen-source-repos v0.1.0
 	github.com/fsnotify/fsnotify v1.4.9
 	github.com/hashicorp/go-cleanhttp v0.5.1
 	github.com/hashicorp/go-retryablehttp v0.7.0
