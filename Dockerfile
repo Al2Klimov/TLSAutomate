@@ -7,11 +7,11 @@ WORKDIR /TLSAutomate
 RUN ["go", "mod", "download"]
 RUN ["go", "generate", "./..."]
 RUN ["go", "build", "-ldflags", "-s -w", "."]
-RUN ["upx", "TLSAutomate"]
+RUN ["upx", "--brute", "TLSAutomate"]
 
 WORKDIR entrypoint
 RUN ["go", "build", "-ldflags", "-s -w", "."]
-RUN ["upx", "entrypoint"]
+RUN ["upx", "--brute", "entrypoint"]
 
 
 FROM golang:alpine as cas
